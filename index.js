@@ -8,10 +8,10 @@ const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+    })
 );
 
 app.use(express.json());
@@ -20,66 +20,86 @@ app.use(express.json());
 const uri = process.env.MONGODB_URI;
 
 const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    },
 });
 
 async function run() {
-  try {
-    await client.connect();
+    try {
+        await client.connect();
 
-    console.log("MongoDB Connected");
+        console.log("MongoDB Connected");
 
-    const db = client.db("propertyrental");
+        const db = client.db("propertyrental");
 
-    const usersCollection = db.collection("users");
+        const usersCollection = db.collection("user");
 
-    // Save User
-    app.post("/users", async (req, res) => {
-      try {
-        const user = req.body;
+        const propertiesCollection = db.collection("properties");
 
-        const existingUser = await usersCollection.findOne({
-          email: user.email,
+        // Get All properties
+        app.get("/properties", async (req, res) => {
+            const result = await propertiesCollection.find().toArray();
+            res.send(result);
+        });
+        // Get Single Property
+        const { ObjectId } = require("mongodb");
+
+        app.get("/properties/:id", async (req, res) => {
+            const id = req.params.id;
+
+            const result = await propertiesCollection.findOne({
+                _id: new ObjectId(id),
+            });
+
+            res.send(result);
         });
 
-        if (existingUser) {
-          return res.send({
-            message: "User already exists",
-          });
-        }
+        // Save User
+        app.post("/users", async (req, res) => {
+            try {
+                const user = req.body;
 
-        const result = await usersCollection.insertOne(user);
+                const existingUser = await usersCollection.findOne({
+                    email: user.email,
+                });
 
-        res.send(result);
-      } catch (error) {
-        res.status(500).send({
-          error: error.message,
+                if (existingUser) {
+                    return res.send({
+                        message: "User already exists",
+                    });
+                }
+
+                const result = await usersCollection.insertOne(user);
+
+                res.send(result);
+            } catch (error) {
+                res.status(500).send({
+                    error: error.message,
+                });
+            }
         });
-      }
-    });
 
-    await client.db("admin").command({
-      ping: 1,
-    });
+        await client.db("admin").command({
+            ping: 1,
+        });
 
-    console.log(
-      "Successfully connected to MongoDB!"
-    );
-  } catch (error) {
-    console.error(error);
-  }
+        console.log(
+            "Successfully connected to MongoDB!"
+        );
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 run();
 
 app.get("/", (req, res) => {
-  res.send("Property Rental Server Running");
+    res.send("Property Rental Server Running");
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+    console.log(`Server running on port ${port}`);
 });
