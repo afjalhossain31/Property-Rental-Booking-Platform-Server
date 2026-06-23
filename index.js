@@ -33,11 +33,16 @@ async function run() {
 
         console.log("MongoDB Connected");
 
-        const db = client.db("propertyrental");
+        const db = client.db("property_rental");
 
-        const usersCollection = db.collection("user");
-
+        const usersCollection = db.collection("users");
         const propertiesCollection = db.collection("properties");
+
+        // Get All Users (এই অংশটুকু যোগ করুন)
+        app.get("/users", async (req, res) => {
+            const result = await usersCollection.find().toArray();
+            res.send(result);
+        });
 
         // Get All properties
         app.get("/properties", async (req, res) => {
