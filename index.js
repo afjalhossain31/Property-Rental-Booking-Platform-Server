@@ -36,16 +36,15 @@ async function run() {
         const transactionsCollection = db.collection("transactions");
 
         // ==========================
-
-        // server.js এ এটি যুক্ত করুন
-        // app.get("/users/:email", async (req, res) => {
-        //     const email = req.params.email;
-        //     const query = { email: email };
-        //     const result = await usersCollection.findOne(query);
-        //     res.send(result);
-        // });
-        // // USERS API
+        // USERS API
         // ==========================
+        app.get("/users/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await usersCollection.findOne(query);
+            res.send(result);
+        });
+
         app.get("/users", async (req, res) => {
             const result = await usersCollection.find().toArray();
             res.send(result);
@@ -59,10 +58,17 @@ async function run() {
             res.send(result);
         });
 
+        app.post("/users/google", async (req, res) => {
+            const user = req.body;
+            const existingUser = await usersCollection.findOne({ email: user.email });
+            if (existingUser) return res.send({ message: "User exists" });
+            const result = await usersCollection.insertOne(user);
+            res.send(result);
+        });
+
         // ==========================
         // PROPERTIES API
         // ==========================
-        // Add Property
         app.post("/properties", async (req, res) => {
             const newProperty = req.body;
             newProperty.status = "Pending";
@@ -70,27 +76,23 @@ async function run() {
             res.send(result);
         });
 
-        // Get All Properties
         app.get("/properties", async (req, res) => {
             const result = await propertiesCollection.find().toArray();
             res.send(result);
         });
 
-        // Get My Properties
         app.get("/properties/owner/:email", async (req, res) => {
             const email = req.params.email;
             const result = await propertiesCollection.find({ ownerEmail: email }).toArray();
             res.send(result);
         });
 
-        // Get Single Property
         app.get("/properties/:id", async (req, res) => {
             const id = req.params.id;
             const result = await propertiesCollection.findOne({ _id: new ObjectId(id) });
             res.send(result);
         });
 
-        // Update Property
         app.patch("/properties/:id", async (req, res) => {
             const id = req.params.id;
             const updateData = req.body;
@@ -100,7 +102,6 @@ async function run() {
             res.send(result);
         });
 
-        // Delete Property
         app.delete("/properties/:id", async (req, res) => {
             const id = req.params.id;
             const result = await propertiesCollection.deleteOne({ _id: new ObjectId(id) });
@@ -108,7 +109,7 @@ async function run() {
         });
 
         // ==========================
-        // FAVORITES API
+        // FAVORITES & BOOKINGS API
         // ==========================
         app.post("/favorites", async (req, res) => {
             const fav = req.body;
@@ -116,21 +117,33 @@ async function run() {
             res.send(result);
         });
 
-        // ==========================
-        // BOOKINGS API
-        // ==========================
         app.post("/bookings", async (req, res) => {
             const booking = req.body;
             const result = await bookingsCollection.insertOne(booking);
             res.send(result);
         });
 
+        // Tenant এর নিজের বুকিং দেখার জন্য
+        app.get("/bookings/user/:email", async (req, res) => {
+            const email = req.params.email;
+            const result = await bookingsCollection.find({ userEmail: email }).toArray();
+            res.send(result);
+        });
+
+        // Owner এর প্রপার্টিতে আসা বুকিং রিকোয়েস্ট দেখার জন্য
         app.get("/bookings/owner/:email", async (req, res) => {
             const email = req.params.email;
             const result = await bookingsCollection.find({ ownerEmail: email }).toArray();
             res.send(result);
         });
 
+        // Admin এর জন্য সব বুকিং (নতুন যোগ করা হলো)
+        app.get("/bookings", async (req, res) => {
+            const result = await bookingsCollection.find().toArray();
+            res.send(result);
+        });
+
+        // বুকিং কনফার্ম/রিজেক্ট করার জন্য (Status Update)
         app.patch("/bookings/:id", async (req, res) => {
             const id = req.params.id;
             const { status } = req.body;
