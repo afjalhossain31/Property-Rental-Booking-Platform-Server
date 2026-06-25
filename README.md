@@ -24,6 +24,14 @@ This backend provides RESTful APIs for a property rental platform where:
 
 ---
 
+## 🛠 Tech Stack
+
+### Client-Side (Frontend)
+* **Framework:** Next.js (App Router)
+* **Styling:** Tailwind CSS, Framer Motion
+* **Payments:** Stripe SDK
+* **Utilities:** React Hot Toast, React Icons
+
 ## 📂 Database Collections
 
 ### Users Collection
