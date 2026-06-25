@@ -7,7 +7,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true
+}));
 app.use(express.json());
 
 // MongoDB URI
@@ -23,7 +26,8 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        await client.connect();
+        //step-1 : deployed mongodb connection 
+        // await client.connect();
         console.log("MongoDB Connected Successfully");
 
         const db = client.db("property_rental");
@@ -158,8 +162,8 @@ async function run() {
             const result = await transactionsCollection.find().toArray();
             res.send(result);
         });
-
-        await client.db("admin").command({ ping: 1 });
+        // step-2: deploy mongodb connection test
+        // await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } catch (error) {
         console.error(error);
