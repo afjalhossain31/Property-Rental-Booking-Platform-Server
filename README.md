@@ -134,7 +134,6 @@ Create a `.env` file:
 
 ```env
 PORT=5000
-
 MONGODB_URI=your_mongodb_connection_string
 ```
 
@@ -147,7 +146,6 @@ Clone the repository:
 ```bash
 git clone https://github.com/your-username/property-rental-server.git
 ```
-
 Install dependencies:
 
 ```bash
@@ -205,7 +203,7 @@ property-rental-server/
 
 ## 👨‍💻 Developer
 
-**Abdullah Al Afjal**
+**Afjal Hossain**
 
 B.Sc. in Computer Science & Engineering
 
