@@ -35,9 +35,7 @@ async function run() {
         const bookingsCollection = db.collection("bookings");
         const transactionsCollection = db.collection("transactions");
 
-        // ==========================
         // USERS API
-        // ==========================
         app.get("/users/:email", async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -66,9 +64,7 @@ async function run() {
             res.send(result);
         });
 
-        // ==========================
         // PROPERTIES API
-        // ==========================
         app.post("/properties", async (req, res) => {
             const newProperty = req.body;
             newProperty.status = "Pending";
@@ -108,9 +104,7 @@ async function run() {
             res.send(result);
         });
 
-        // ==========================
         // FAVORITES & BOOKINGS API
-        // ==========================
         app.post("/favorites", async (req, res) => {
             const fav = req.body;
             const result = await favoritesCollection.insertOne(fav);
@@ -123,27 +117,27 @@ async function run() {
             res.send(result);
         });
 
-        // Tenant এর নিজের বুকিং দেখার জন্য
+        // Tenant
         app.get("/bookings/user/:email", async (req, res) => {
             const email = req.params.email;
             const result = await bookingsCollection.find({ userEmail: email }).toArray();
             res.send(result);
         });
 
-        // Owner এর প্রপার্টিতে আসা বুকিং রিকোয়েস্ট দেখার জন্য
+        // Owner 
         app.get("/bookings/owner/:email", async (req, res) => {
             const email = req.params.email;
             const result = await bookingsCollection.find({ ownerEmail: email }).toArray();
             res.send(result);
         });
 
-        // Admin এর জন্য সব বুকিং (নতুন যোগ করা হলো)
+        // Admin 
         app.get("/bookings", async (req, res) => {
             const result = await bookingsCollection.find().toArray();
             res.send(result);
         });
 
-        // বুকিং কনফার্ম/রিজেক্ট করার জন্য (Status Update)
+        //Status Update)
         app.patch("/bookings/:id", async (req, res) => {
             const id = req.params.id;
             const { status } = req.body;
@@ -153,9 +147,7 @@ async function run() {
             res.send(result);
         });
 
-        // ==========================
         // TRANSACTIONS API
-        // ==========================
         app.post("/transactions", async (req, res) => {
             const transaction = req.body;
             const result = await transactionsCollection.insertOne(transaction);
