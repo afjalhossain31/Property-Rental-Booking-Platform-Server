@@ -32,6 +32,11 @@ This backend provides RESTful APIs for a property rental platform where:
 * **Payments:** Stripe SDK
 * **Utilities:** React Hot Toast, React Icons
 
+### Server-Side (Backend)
+* **Runtime:** Node.js, Express.js
+* **Database:** MongoDB (with Native Driver)
+* **Security:** JSON Web Token (JWT), CORS, Doten
+
 ## 📂 Database Collections
 
 ### Users Collection
