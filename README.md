@@ -1,13 +1,7 @@
 # 🏠 Property Rental Server
 
 Backend API for the Property Rental & Booking Platform. This server handles user management, property listings, favorites, bookings, and transactions using Express.js and MongoDB.
-
-## 🚀 Live API
-
-Server URL: https://your-server-url.vercel.app
-
 ---
-
 ## 📌 Project Overview
 
 This backend provides RESTful APIs for a property rental platform where:
@@ -19,7 +13,6 @@ This backend provides RESTful APIs for a property rental platform where:
 * Admins can monitor users, properties, bookings, and transactions.
 
 ---
-
 ## 🛠️ Technologies Used
 
 * Node.js
@@ -68,19 +61,6 @@ Stores:
 Stores:
 
 * Payment Transaction Records
-
----
-
-## 🔥 API Endpoints
-
-### 👤 Users
-
-| Method | Endpoint      | Description              |
-| ------ | ------------- | ------------------------ |
-| GET    | /users        | Get all users            |
-| GET    | /users/:email | Get user by email        |
-| POST   | /users        | Create new user          |
-| POST   | /users/google | Create Google login user |
 
 ---
 
